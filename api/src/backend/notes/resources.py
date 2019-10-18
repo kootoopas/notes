@@ -23,7 +23,7 @@ class Notes(Resource):
 
     @map_kwargs(NoteCreationInputSchema())
     @map_output(NoteSchema())
-    def create(self, title: str, body: str) -> NoteModel:
+    def post(self, title: str, body: str) -> NoteModel:
         return note_service().create(title, body)
 
 
