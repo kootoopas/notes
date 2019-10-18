@@ -1,18 +1,44 @@
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from datetime import datetime
-from typing import List
+from typing import List, Iterable
+
+from mongoengine import QuerySet
 
 from notes.models import Note
 
 
+class PaginationService(ABC):
+    # TODO: Implement generic for collection
+    @abstractmethod
+    def paginate(self, collection: Iterable, page: int, size: int) -> Iterable:
+        pass
+
+
+class QuerySetPaginationService(PaginationService):
+    def paginate(self, collection: QuerySet, page: int, size: int) -> QuerySet:
+        # TODO: validate page and size
+
+        start = page * size
+        end = page * size + size
+        return collection[start:end]
+
+
+@dataclass
 class NoteService:
+
+    pagination_service: PaginationService
+
     def get(self, id: str) -> Note:
         return Note.objects.with_id(id)
 
-    def getAll(self) -> List[Note]:
-        return list(Note.objects())
+    def paginate(self, page: int, size: int) -> List[Note]:
+        return list(self.pagination_service.paginate(Note.objects, page, size))
 
-    def search(self, text: str) -> List[Note]:
-        return list(Note.objects.search_text(text).order_by('$text_score'))
+    def search(self, text: str, page: int, size: int) -> List[Note]:
+        return list(
+            self.pagination_service.paginate(Note.objects.search_text(text).order_by('$text_score'), page, size)
+        )
 
     def create(self, title: str, body: str) -> Note:
         date = datetime.utcnow()

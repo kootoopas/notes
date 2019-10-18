@@ -24,3 +24,5 @@ class NoteFilterSchema(BaseSchema):
     text = fields.Str(
         missing=None
     )
+    page = fields.Int()
+    size = fields.Int()

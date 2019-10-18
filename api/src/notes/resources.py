@@ -16,10 +16,10 @@ class Notes(Resource):
 
     @map_kwargs(NoteFilterSchema())
     @map_output(NoteSchema(many=True))
-    def get(self, text: str) -> List[NoteModel]:
+    def get(self, text: str, page: int, size: int) -> List[NoteModel]:
         if text:
-            return note_service().search(text)
-        return note_service().getAll()
+            return note_service().search(text, page, size)
+        return note_service().paginate(page, size)
 
     @map_kwargs(NoteCreationInputSchema())
     @map_output(NoteSchema())
