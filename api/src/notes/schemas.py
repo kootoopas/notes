@@ -11,6 +11,8 @@ class NoteSchema(BaseSchema):
     id = fields.Str()
     title = fields.Str()
     body = fields.Str()
+    creation_date = fields.DateTime()
+    modification_date = fields.DateTime()
 
 
 class NoteCreationInputSchema(BaseSchema):
