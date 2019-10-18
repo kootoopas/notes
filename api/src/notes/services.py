@@ -12,7 +12,7 @@ class NoteService:
         return list(Note.objects())
 
     def search(self, text: str) -> List[Note]:
-        return list(Note.objects.search_text(text))
+        return list(Note.objects.search_text(text).order_by('$text_score'))
 
     def create(self, title: str, body: str) -> Note:
         date = datetime.utcnow()
