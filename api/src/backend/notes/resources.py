@@ -1,11 +1,45 @@
+from typing import List
+
 from flask_restplus import Resource
 
 from notes.api import api
+from notes.factories import note_service
+from notes.models import Note as NoteModel
+from notes.schemas import NoteSchema, NoteFilterSchema, NoteCreationInputSchema
+from notes.utilities import map_output, map_kwargs
 
 notes_ns = api.namespace('notes')
 
 
-@notes_ns.route('/')
+@notes_ns.route('')
+class Notes(Resource):
+
+    @map_kwargs(NoteFilterSchema())
+    @map_output(NoteSchema(many=True))
+    def get(self, text: str) -> List[NoteModel]:
+        if text:
+            return note_service().search(text)
+        return note_service().getAll()
+
+    @map_kwargs(NoteCreationInputSchema())
+    @map_output(NoteSchema())
+    def create(self, title: str, body: str) -> NoteModel:
+        return note_service().create(title, body)
+
+
+@notes_ns.route('/<id>')
 class Note(Resource):
-    def get(self):
-        return {'a': 1}
+
+    @map_output(NoteSchema())
+    def get(self, id: str) -> NoteModel:
+        return note_service().get(id)
+
+    @map_kwargs(NoteCreationInputSchema())
+    @map_output(NoteSchema())
+    def put(self, id: str, title: str, body: str) -> NoteModel:
+        return note_service().update(id, title, body)
+
+    @map_kwargs(NoteCreationInputSchema())
+    @map_output(NoteSchema())
+    def delete(self, id: str) -> NoteModel:
+        return note_service().delete(id)
