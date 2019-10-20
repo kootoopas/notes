@@ -1,0 +1,11 @@
+import {Note} from './note';
+
+export function marshalNote(note: any): Note {
+  return {
+    id: note.id,
+    title: note.title,
+    body: note.body,
+    creationDate: new Date(note.creation_date),
+    modificationDate: new Date(note.modification_date)
+  }
+}
