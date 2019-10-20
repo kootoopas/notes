@@ -5,7 +5,7 @@ import {Observable, OperatorFunction, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {isEmptyObject} from '../../utilities';
-import {marshalNote} from './marshallers';
+import {marshalApiNote} from './marshallers';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class NoteService {
           return null
         }
 
-        return marshalNote(note)
+        return marshalApiNote(note)
       }))
   }
 
@@ -36,7 +36,7 @@ export class NoteService {
           size: size.toString()
         }
       }
-    ).pipe(map((notes: any[]) => notes.map(note => marshalNote(note))))
+    ).pipe(map((notes: any[]) => notes.map(note => marshalApiNote(note))))
   }
 
   search(text: string, page: number, size: number): Observable<Note[]> {
@@ -49,7 +49,7 @@ export class NoteService {
           size: size.toString()
         }
       }
-    ).pipe(map((notes: any[]) => notes.map(note => marshalNote(note))))
+    ).pipe(map((notes: any[]) => notes.map(note => marshalApiNote(note))))
   }
 
   create(title: string, body: string): Observable<Note> {
@@ -57,7 +57,7 @@ export class NoteService {
       title,
       body
     }).pipe(
-      map((note) => marshalNote(note)),
+      map((note) => marshalApiNote(note)),
       this.catchError()
     )
   }
@@ -68,7 +68,7 @@ export class NoteService {
       title,
       body
     }).pipe(
-      map((note) => marshalNote(note)),
+      map((note) => marshalApiNote(note)),
       this.catchError()
     )
   }

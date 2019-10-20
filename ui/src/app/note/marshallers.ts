@@ -1,6 +1,6 @@
 import {Note} from './note';
 
-export function marshalNote(note: any): Note {
+export function marshalApiNote(note: any): Note {
   return {
     id: note.id,
     title: note.title,
