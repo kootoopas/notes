@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TextSnippetComponent } from './text-snippet.component';
 import {provideMockStore} from '@ngrx/store/testing';
+import {asSpy} from '../../../test/utilities';
 
 describe('TextSnippetComponent', () => {
   let component: TextSnippetComponent;
@@ -19,6 +20,7 @@ describe('TextSnippetComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TextSnippetComponent);
     component = fixture.componentInstance;
+    component.id = '1'
     component.header = 'a'
     component.body = 'x'
     component.bodyLimit = 100
@@ -77,5 +79,26 @@ describe('TextSnippetComponent', () => {
     fixture.detectChanges()
 
     expect(element.querySelector('.footer').textContent).toBe('')
+  })
+
+  it('should visually represent active state when specified', () => {
+    fixture.detectChanges()
+    const snippetElement = element.querySelector('.note-snippet')
+    expect(snippetElement).not.toHaveClass('active')
+
+    component.active = true
+    fixture.detectChanges()
+
+    expect(snippetElement).toHaveClass('active')
+  })
+
+  it('should request snippet activation on double click', () => {
+    fixture.detectChanges()
+
+    element.querySelector('.note-snippet').dispatchEvent(new Event('dblclick'))
+    fixture.detectChanges()
+
+    expect(asSpy(component.activationRequest.emit)).toHaveBeenCalledTimes(1)
+    expect(asSpy(component.activationRequest.emit)).toHaveBeenCalledWith('1')
   })
 });

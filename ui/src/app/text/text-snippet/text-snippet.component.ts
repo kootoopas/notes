@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-text-snippet',
@@ -7,6 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class TextSnippetComponent implements OnInit {
 
+  @Input() id: string
   @Input() header: string
   @Input() body: string
   bodyLimit1: number
@@ -19,6 +20,8 @@ export class TextSnippetComponent implements OnInit {
     this.bodyLimit1 = bodyLimit
   }
   @Input() footer: string
+  @Input() active = false
+  @Output() activationRequest = new EventEmitter<string>()
 
 
   constructor() { }
