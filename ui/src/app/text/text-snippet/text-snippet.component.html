@@ -1,0 +1,3 @@
+<h5 class='header'>{{ header }}</h5>
+<div class='body'>{{ body?.length <= bodyLimit1 ? body : (body | slice:0:bodyLimit1) + '…'  }}</div>
+<footer class='footer'><small>{{ footer }}</small></footer>
