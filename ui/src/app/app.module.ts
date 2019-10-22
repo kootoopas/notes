@@ -4,10 +4,11 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import {NoteModule} from './note/note.module';
+import {EffectsModule} from '@ngrx/effects';
+import {NoteEffects} from './note/note.effects';
 
 @NgModule({
   declarations: [
@@ -16,15 +17,15 @@ import {NoteModule} from './note/note.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    StoreModule.forRoot(reducers, {
-      metaReducers,
+    StoreModule.forRoot({}, {
       runtimeChecks: {
         strictStateImmutability: true,
         strictActionImmutability: true,
       }
     }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
-    NoteModule
+    NoteModule,
+    EffectsModule.forRoot([NoteEffects])
   ],
   providers: [],
   bootstrap: [AppComponent]

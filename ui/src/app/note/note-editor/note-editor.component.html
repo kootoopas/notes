@@ -1,0 +1,7 @@
+<ng-container *ngIf='(note$ | async) || {}; let note'>
+  <app-text-editor [title]='note.title'
+                   (titleEditRequest)='requestNoteEdit(note.id, $event, note.body)'
+                   [body]='note.body'
+                   (bodyEditRequest)='requestNoteEdit(note.id, note.title, $event)'
+                   [meta]='null'></app-text-editor>
+</ng-container>
