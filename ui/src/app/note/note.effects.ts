@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, map, mergeMap, exhaustMap, switchMap} from 'rxjs/operators';
+import {catchError, map, mergeMap, switchMap, exhaustMap} from 'rxjs/operators';
 import { of } from 'rxjs';
 import {NoteService} from './note.service';
 import {
@@ -26,7 +26,7 @@ export class NoteEffects {
   loadNotes$ = createEffect(() => this.actions$.pipe(
     ofType(loadNotes),
     mergeMap((action) => this.store.pipe(select(selectPage))),
-    mergeMap((page) => this.noteService.getList(page.number, page.size).pipe(
+    exhaustMap((page) => this.noteService.getList(page.number, page.size).pipe(
       map((notes: Note[]) => loadNotesSuccess({ notes })),
       catchError((error) => of(loadNotesFailure({ error })))
     ))
