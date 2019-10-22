@@ -3,5 +3,5 @@
                    (titleEditRequest)='requestNoteEdit(note.id, $event, note.body)'
                    [body]='note.body'
                    (bodyEditRequest)='requestNoteEdit(note.id, note.title, $event)'
-                   [meta]='null'></app-text-editor>
+                   [meta]='createMetaFromNote() | async'></app-text-editor>
 </ng-container>

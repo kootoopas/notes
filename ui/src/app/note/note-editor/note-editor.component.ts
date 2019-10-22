@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {RootState} from '../../reducers';
 import {selectActiveNote} from '../note.selectors';
 import {createNote, updateNote} from '../note.actions';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-note-editor',
@@ -28,5 +29,18 @@ export class NoteEditorComponent implements OnInit {
     }
 
     this.store.dispatch(createNote({title, body}))
+  }
+
+  createMetaFromNote(): Observable<Map<string, string>> {
+    return this.note$.pipe(map(note => {
+      if (!note) {
+        return new Map()
+      }
+
+      return new Map([
+        ['creation date', note.creationDate.toLocaleString()],
+        ['modification date', note.modificationDate.toLocaleString()]
+      ]);
+    }))
   }
 }
