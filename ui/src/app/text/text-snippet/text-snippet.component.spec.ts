@@ -94,11 +94,12 @@ describe('TextSnippetComponent', () => {
 
   it('should request snippet activation on double click', () => {
     fixture.detectChanges()
+    const activationRequestSpy = spyOn(component.activationRequest, 'emit')
 
     element.querySelector('.note-snippet').dispatchEvent(new Event('dblclick'))
     fixture.detectChanges()
 
-    expect(asSpy(component.activationRequest.emit)).toHaveBeenCalledTimes(1)
-    expect(asSpy(component.activationRequest.emit)).toHaveBeenCalledWith('1')
+    expect(activationRequestSpy).toHaveBeenCalledTimes(1)
+    expect(activationRequestSpy).toHaveBeenCalledWith('1')
   })
 });
