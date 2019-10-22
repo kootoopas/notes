@@ -201,7 +201,6 @@ describe('NoteService', () => {
       const modificationDate = new Date()
       clock().mockDate(modificationDate)
 
-      // TODO: Fix Date equality assertion
       service.update('a', 'i2', 'y2').subscribe(note => {
         expect(note).toEqual({
           id: 'a',
@@ -229,7 +228,6 @@ describe('NoteService', () => {
     })
 
     it('should throw error when server sends client error response', () => {
-      // TODO: Fix error handling to raise error instead of http thrown error
       service.update('c', 'k', 'z')
         .subscribe({
           error(error) {

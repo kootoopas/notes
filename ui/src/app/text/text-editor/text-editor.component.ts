@@ -40,7 +40,7 @@ export class TextEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // TODO wait for request to beperformed before unsubscribing
+    // TODO wait for request to be performed before un-subscribing.
     this.titleChangeSubscription.unsubscribe()
     this.bodyChangeSubscription.unsubscribe()
   }
