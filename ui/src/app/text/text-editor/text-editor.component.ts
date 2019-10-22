@@ -34,12 +34,13 @@ export class TextEditorComponent implements OnInit, OnDestroy {
     this.bodyChangeSubscription = this.bodyChange.pipe(
       debounceTime(500),
       distinctUntilChanged()
-    ).subscribe(title => {
-      this.bodyEditRequest.emit(title);
+    ).subscribe(body => {
+      this.bodyEditRequest.emit(body);
     })
   }
 
   ngOnDestroy(): void {
+    // TODO wait for request to beperformed before unsubscribing
     this.titleChangeSubscription.unsubscribe()
     this.bodyChangeSubscription.unsubscribe()
   }

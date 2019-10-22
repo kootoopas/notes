@@ -1,5 +1,5 @@
 <input class='title-editor' type='text' [(ngModel)]='title'
-       (ngModelChange)='titleChange.next(title)'>
+       (ngModelChange)='titleChange.next(title)' [disabled]='title === null'>
 
 <div class='meta-pairs'>
   <div class='meta-pair' *ngFor='let metaPair of meta | keyvalue'>
@@ -8,5 +8,5 @@
   </div>
 </div>
 
-<textarea class='body-editor' [(ngModel)]='body' (ngModelChange)='bodyChange.next(body)' cols='30'
-          rows='10'></textarea>
+<textarea class='body-editor' [(ngModel)]='body' (ngModelChange)='bodyChange.next(body)'
+          [disabled]='body === null' cols='30' rows='10'></textarea>
