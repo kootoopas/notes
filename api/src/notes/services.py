@@ -33,7 +33,7 @@ class NoteService:
         return Note.objects.with_id(id)
 
     def paginate(self, page: int, size: int) -> List[Note]:
-        return list(self.pagination_service.paginate(Note.objects, page, size))
+        return list(self.pagination_service.paginate(Note.objects.order_by({'_id': -1}), page, size))
 
     def search(self, text: str, page: int, size: int) -> List[Note]:
         return list(
