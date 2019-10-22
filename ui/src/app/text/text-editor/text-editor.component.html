@@ -1,0 +1,12 @@
+<input class='title-editor' type='text' [(ngModel)]='title'
+       (ngModelChange)='titleChange.next(title)'>
+
+<div class='meta-pairs'>
+  <div class='meta-pair' *ngFor='let metaPair of meta | keyvalue'>
+    <span class='meta-key'>{{metaPair.key}}</span>:
+    <span class='meta-value'>{{metaPair.value}}</span>
+  </div>
+</div>
+
+<textarea class='body-editor' [(ngModel)]='body' (ngModelChange)='bodyChange.next(body)' cols='30'
+          rows='10'></textarea>
