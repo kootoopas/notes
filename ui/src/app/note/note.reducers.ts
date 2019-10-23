@@ -4,7 +4,7 @@ import {
   on
 } from '@ngrx/store';
 import {Note} from './note';
-import {activateNote, initNote, loadNotesSuccess} from './note.actions';
+import {activateNote, activateRecentlyModifiedNote, createNoteSuccess, initNote, loadNotesSuccess} from './note.actions';
 import {Page} from './page';
 
 export const noteFeatureKey = 'note';
@@ -30,6 +30,10 @@ const noteReducer1 = createReducer(
     ...state,
     collection: notes,
     active: state.active && notes.find(note => note.id === state.active.id) || state.active
+  })),
+  on(createNoteSuccess, (state, {note}) => ({
+    ...state,
+    active: note
   })),
   on(initNote, (state, {note}) => ({
     ...state,

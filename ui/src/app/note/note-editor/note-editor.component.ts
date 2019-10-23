@@ -1,46 +1,75 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Note} from '../note';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, fromEvent, Subscription} from 'rxjs';
 import {RootState} from '../../reducers';
 import {selectActiveNote} from '../note.selectors';
-import {createNote, updateNote} from '../note.actions';
-import {map} from 'rxjs/operators';
+import {activateRecentlyModifiedNote, createNote, updateNote} from '../note.actions';
+import {createEmptyNote} from '../index';
+import {debounceTime, filter, map, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-note-editor',
   templateUrl: './note-editor.component.html',
   styleUrls: ['./note-editor.component.scss']
 })
-export class NoteEditorComponent implements OnInit {
+export class NoteEditorComponent implements OnInit, OnDestroy {
 
-  note$: Observable<Note>
+  writableNote$ = new BehaviorSubject<Note>(createEmptyNote())
+  subscriptions: Set<Subscription>
 
   constructor(private store: Store<RootState>) {}
 
   ngOnInit(): void {
-    this.note$ = this.store.pipe(select(selectActiveNote))
+    this.store.dispatch(activateRecentlyModifiedNote())
+
+    const noteSubscription = this.store.pipe(
+      select(selectActiveNote),
+      map((note: Note) => note || createEmptyNote()),
+    ).subscribe(this.writableNote$)
+
+    const newNoteEventSubscription = fromEvent<KeyboardEvent>(document, 'keydown')
+      .pipe(
+        filter(event => event.ctrlKey && event.key === 'n'),
+        debounceTime(200)
+      )
+      .subscribe(() => this.requestNewNote())
+
+    this.subscriptions = new Set([noteSubscription, newNoteEventSubscription])
   }
 
-  requestNoteEdit(id: string, title: string, body: string): void {
-    if (id) {
-      this.store.dispatch(updateNote({id, title, body}))
-      return
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe())
+  }
+
+  requestTitleEdit(note: Note, title: string): void {
+    this.writableNote$.next({...note, title})
+    this.store.dispatch(updateNote(this.writableNote$.getValue()))
+  }
+
+  requestBodyEdit(note: Note, body: string): void {
+    this.writableNote$.next({...note, body})
+    this.store.dispatch(updateNote(this.writableNote$.getValue()))
+  }
+
+  createMeta(note: Note): Map<string, string> {
+    if (!note || !note.creationDate || !note.modificationDate) {
+      return new Map()
     }
 
-    this.store.dispatch(createNote({title, body}))
+    return new Map([
+      ['creation date', note.creationDate.toLocaleString()],
+      ['modification date', note.modificationDate.toLocaleString()]
+    ])
   }
 
-  createMetaFromNote(): Observable<Map<string, string>> {
-    return this.note$.pipe(map(note => {
-      if (!note) {
-        return new Map()
-      }
+  requestNewNote(): void {
+    // Save editing note.
+    this.store.dispatch(updateNote(this.writableNote$.getValue()))
 
-      return new Map([
-        ['creation date', note.creationDate.toLocaleString()],
-        ['modification date', note.modificationDate.toLocaleString()]
-      ]);
-    }))
+    this.writableNote$.next(createEmptyNote())
+
+    // Create new note.
+    this.store.dispatch(createNote(this.writableNote$.getValue()))
   }
 }

@@ -1,7 +1,7 @@
-<ng-container *ngIf='(note$ | async) || {}; let note'>
+<ng-container *ngIf='(writableNote$ | async) || {}; let note'>
   <app-text-editor [title]='note.title'
-                   (titleEditRequest)='requestNoteEdit(note.id, $event, note.body)'
+                   (titleEditRequest)='requestTitleEdit(note, $event)'
                    [body]='note.body'
-                   (bodyEditRequest)='requestNoteEdit(note.id, note.title, $event)'
-                   [meta]='createMetaFromNote() | async'></app-text-editor>
+                   (bodyEditRequest)='requestBodyEdit(note, $event)'
+                   [meta]='createMeta(note)'></app-text-editor>
 </ng-container>

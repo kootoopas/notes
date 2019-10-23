@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, map, mergeMap, switchMap, exhaustMap} from 'rxjs/operators';
-import { of } from 'rxjs';
+import {catchError, map, mergeMap, switchMap, exhaustMap, filter, tap, withLatestFrom, combineLatest, concatMap} from 'rxjs/operators';
+import {EMPTY, of} from 'rxjs';
 import {NoteService} from './note.service';
 import {
   createNote,
@@ -12,11 +12,12 @@ import {
   loadNotesSuccess,
   updateNote,
   updateNoteSuccess,
-  updateNoteFailure
+  updateNoteFailure,
+  activateNote
 } from './note.actions';
 import {Note} from './note';
 import {select, Store} from '@ngrx/store';
-import {selectPage} from './note.selectors';
+import {selectActiveNote, selectNoteCollection, selectPage} from './note.selectors';
 import {RootState} from '../reducers';
 
 
@@ -32,13 +33,22 @@ export class NoteEffects {
     ))
   ))
 
+  initActiveNote$ = createEffect(() => this.actions$.pipe(
+    ofType(loadNotesSuccess),
+    concatMap((action) => of(action).pipe(
+      withLatestFrom(this.store.pipe(select(selectActiveNote)))
+    )),
+    filter(([action, active]) => action.notes && action.notes.length && !active),
+    map(([action, _]) => activateNote(action.notes[0]))
+  ))
+
   createNote$ = createEffect(() => this.actions$.pipe(
     ofType(createNote),
     mergeMap((action) =>
       this.noteService.create(action.title, action.body).pipe(
         switchMap((note) => [
-          createNoteSuccess({ note }),
-          loadNotes()
+          loadNotes(),
+          createNoteSuccess({ note })
         ]),
         catchError(error => of(createNoteFailure({ error })))
       )

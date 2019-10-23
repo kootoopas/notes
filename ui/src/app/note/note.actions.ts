@@ -68,3 +68,7 @@ export const activateNote = createAction(
   '[Note] Activate Note',
   props<{ id: string }>()
 )
+
+export const activateRecentlyModifiedNote = createAction(
+  '[Note] Activate Recently-modified Note'
+)
