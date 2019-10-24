@@ -40,7 +40,7 @@ export class NoteEffects {
     )),
     // Exits if there's already an active note.
     filter(([action, active]) => action.notes && action.notes.length && !active),
-    map(([action, _]) => activateNote(action.notes[0]))
+    map(([action, _]) => activateNote({ id: action.notes[0].id }))
   ))
 
   createNote$ = createEffect(() => this.actions$.pipe(
