@@ -13,7 +13,7 @@ export interface NoteState {
   collection: Note[];
   active: Note;
   page: Page;
-};
+}
 
 export const initialState: NoteState = {
   collection: [],
