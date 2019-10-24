@@ -63,6 +63,16 @@ export class NoteEffects {
     )
   ))
 
+  deleteNote$ = createEffect(() => this.actions$.pipe(
+    ofType(deleteNote),
+    mergeMap((action) =>
+      this.noteService.delete(action.id).pipe(
+        map(() => deleteNoteSuccess({ id: action.id })),
+        catchError(error => of(deleteNoteFailure({ error })))
+      )
+    )
+  ))
+
   constructor(
     private store: Store<RootState>,
     private actions$: Actions,

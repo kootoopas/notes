@@ -4,7 +4,7 @@ import {Note} from '../note';
 import {BehaviorSubject, fromEvent, Subscription} from 'rxjs';
 import {RootState} from '../../reducers';
 import {selectActiveNote} from '../note.selectors';
-import {activateRecentlyModifiedNote, createNote, updateNote} from '../note.actions';
+import {createNote, updateNote} from '../note.actions';
 import {createEmptyNote} from '../index';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
 
@@ -21,8 +21,6 @@ export class NoteEditorComponent implements OnInit, OnDestroy {
   constructor(private store: Store<RootState>) {}
 
   ngOnInit(): void {
-    this.store.dispatch(activateRecentlyModifiedNote())
-
     const noteSubscription = this.store.pipe(
       select(selectActiveNote),
       map((note: Note) => note || createEmptyNote()),

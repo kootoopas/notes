@@ -4,7 +4,7 @@ import {
   on
 } from '@ngrx/store';
 import {Note} from './note';
-import {activateNote, activateRecentlyModifiedNote, createNoteSuccess, initNote, loadNotesSuccess} from './note.actions';
+import {activateNote, createNoteSuccess, deleteNote, deleteNoteSuccess, loadNotesSuccess, updateNoteSuccess} from './note.actions';
 import {Page} from './page';
 
 export const noteFeatureKey = 'note';
@@ -43,6 +43,21 @@ const noteReducer1 = createReducer(
       collection: [...state.collection.slice(0, noteIndex), note, ...state.collection.slice(noteIndex + 1)],
       active: note
     });
+  }),
+  on(deleteNoteSuccess, (state, {id}) => {
+    const getNextActiveNoteIndex = () => {
+      const deletedNoteIndex: number = state.collection.findIndex((note) => note.id === id)
+      return deletedNoteIndex === 0
+        ? deletedNoteIndex + 1
+        : deletedNoteIndex - 1
+    }
+    return {
+      ...state,
+      collection: state.collection.filter((note) => note.id !== id),
+      active: state.active.id === id
+        ? state.collection[getNextActiveNoteIndex()]
+        : state.active
+    }
   }),
   on(activateNote, (state, {id}) => ({
     ...state,

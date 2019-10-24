@@ -64,11 +64,22 @@ export const updateNoteFailure = createAction(
   props<{ error: Error }>()
 )
 
-export const activateNote = createAction(
-  '[Note] Activate Note',
+export const deleteNote = createAction(
+  '[Note] Delete Note',
   props<{ id: string }>()
 )
 
-export const activateRecentlyModifiedNote = createAction(
-  '[Note] Activate Recently-modified Note'
+export const deleteNoteSuccess = createAction(
+  '[Note] Delete Note Success',
+  props<{ id: string }>()
+)
+
+export const deleteNoteFailure = createAction(
+  '[Note] Delete Note Failure',
+  props<{ error: Error }>()
+)
+
+export const activateNote = createAction(
+  '[Note] Activate Note',
+  props<{ id: string }>()
 )
