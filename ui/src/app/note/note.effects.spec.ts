@@ -8,10 +8,10 @@ import {
   activateNote,
   createNote,
   createNoteFailure,
-  createNoteSuccess,
+  createNoteSuccess, deleteNote, deleteNoteFailure, deleteNoteSuccess,
   loadNotes,
   loadNotesFailure,
-  loadNotesSuccess
+  loadNotesSuccess, updateNote, updateNoteFailure, updateNoteSuccess
 } from './note.actions';
 import {NoteEffects} from './note.effects';
 import {selectActiveNote, selectNoteCollection, selectPage} from './note.selectors';
@@ -129,7 +129,7 @@ describe('NoteEffects', () => {
         modificationDate: new Date()
       }
       asSpy(noteServiceMock.create).and.returnValue(of(note))
-      actions$ = of(createNote({ title: 'd', body: 'x\'' }))
+      actions$ = of(createNote({ title: 'i\'', body: 'x\'' }))
 
       effects.createNote$.subscribe((action) => {
         expect(action).toEqual(createNoteSuccess({ note }))
@@ -147,10 +147,42 @@ describe('NoteEffects', () => {
   })
 
   describe('update note', () => {
+    it('should update note and signal success', () => {
+      asSpy(noteServiceMock.update).and.returnValue(of({ ...notes[0], title: 'i"', body: 'x\'' }))
+      actions$ = of(updateNote({ id: notes[0].id, title: 'i"', body: 'x\'' }))
 
+      effects.updateNote$.subscribe((action) => {
+        expect(action).toEqual(updateNoteSuccess({ note: { ...notes[0], title: 'i"', body: 'x\'' } }))
+      })
+    })
+
+    it('should fail when error occurs in note update', () => {
+      asSpy(noteServiceMock.update).and.returnValue(throwError(new Error('Error.')))
+      actions$ = of(updateNote({ id: notes[0].id, title: 'i"', body: 'x\'' }))
+
+      effects.updateNote$.subscribe((action) => {
+        expect(action).toEqual(updateNoteFailure({ error: new Error('Error.') }))
+      })
+    })
   })
 
   describe('delete note', () => {
+    it('should delete note and signal success', () => {
+      asSpy(noteServiceMock.delete).and.returnValue(of(true))
+      actions$ = of(deleteNote({ id: notes[0].id }))
 
+      effects.deleteNote$.subscribe((action) => {
+        expect(action).toEqual(deleteNoteSuccess({ id: notes[0].id }))
+      })
+    })
+
+    it('should fail when error occurs in note deletion', () => {
+      asSpy(noteServiceMock.delete).and.returnValue(throwError(new Error('Error.')))
+      actions$ = of(deleteNote({ id: notes[0].id }))
+
+      effects.deleteNote$.subscribe((action) => {
+        expect(action).toEqual(deleteNoteFailure({ error: new Error('Error.') }))
+      })
+    })
   })
 })
