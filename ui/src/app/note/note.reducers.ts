@@ -33,17 +33,21 @@ const noteReducer1 = createReducer(
   })),
   on(createNoteSuccess, (state, {note}) => ({
     ...state,
-    active: note
-  })),
-  on(initNote, (state, {note}) => ({
-    ...state,
     collection: [note, ...state.collection],
     active: note
   })),
+  on(updateNoteSuccess, (state, {note}) => {
+    const noteIndex = state.collection.findIndex((collectionNote) => collectionNote.id === note.id)
+    return ({
+      ...state,
+      collection: [...state.collection.slice(0, noteIndex), note, ...state.collection.slice(noteIndex + 1)],
+      active: note
+    });
+  }),
   on(activateNote, (state, {id}) => ({
     ...state,
     active: state.collection.find(note => note.id === id) || state.active
-  }))
+  })),
 )
 
 export function noteReducer(state: NoteState | undefined, action: Action) {

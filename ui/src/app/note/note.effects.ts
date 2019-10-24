@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, map, mergeMap, switchMap, exhaustMap, filter, tap, withLatestFrom, combineLatest, concatMap} from 'rxjs/operators';
-import {EMPTY, of} from 'rxjs';
+import {catchError, map, mergeMap, exhaustMap, filter, withLatestFrom, concatMap} from 'rxjs/operators';
+import {of} from 'rxjs';
 import {NoteService} from './note.service';
 import {
   createNote,
@@ -13,11 +13,11 @@ import {
   updateNote,
   updateNoteSuccess,
   updateNoteFailure,
-  activateNote
+  activateNote, deleteNote, deleteNoteSuccess, deleteNoteFailure
 } from './note.actions';
 import {Note} from './note';
 import {select, Store} from '@ngrx/store';
-import {selectActiveNote, selectNoteCollection, selectPage} from './note.selectors';
+import {selectActiveNote, selectPage} from './note.selectors';
 import {RootState} from '../reducers';
 
 
@@ -38,6 +38,7 @@ export class NoteEffects {
     concatMap((action) => of(action).pipe(
       withLatestFrom(this.store.pipe(select(selectActiveNote)))
     )),
+    // Exits if there's already an active note.
     filter(([action, active]) => action.notes && action.notes.length && !active),
     map(([action, _]) => activateNote(action.notes[0]))
   ))
@@ -46,10 +47,7 @@ export class NoteEffects {
     ofType(createNote),
     mergeMap((action) =>
       this.noteService.create(action.title, action.body).pipe(
-        switchMap((note) => [
-          loadNotes(),
-          createNoteSuccess({ note })
-        ]),
+        map((note) => createNoteSuccess({ note })),
         catchError(error => of(createNoteFailure({ error })))
       )
     )
@@ -59,10 +57,7 @@ export class NoteEffects {
     ofType(updateNote),
     mergeMap((action) =>
       this.noteService.update(action.id, action.title, action.body).pipe(
-        switchMap((note) => [
-          updateNoteSuccess({ note }),
-          loadNotes()
-        ]),
+        map((note) => updateNoteSuccess({ note })),
         catchError(error => of(updateNoteFailure({ error })))
       )
     )
