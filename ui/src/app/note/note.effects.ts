@@ -39,7 +39,7 @@ export class NoteEffects {
       withLatestFrom(this.store.pipe(select(selectActiveNote)))
     )),
     // Exits if there's already an active note.
-    filter(([action, active]) => action.notes && action.notes.length && !active),
+    filter(([action, active]) => action.notes && action.notes.length > 0 && !active),
     map(([action, _]) => activateNote({ id: action.notes[0].id }))
   ))
 
