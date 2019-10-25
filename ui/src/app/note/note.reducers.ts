@@ -4,15 +4,15 @@ import {
   on
 } from '@ngrx/store';
 import {Note} from './note';
-import {activateNote, createNoteSuccess, deleteNote, deleteNoteSuccess, loadNotesSuccess, updateNoteSuccess} from './note.actions';
+import {activateNote, createNoteSuccess, deleteNoteSuccess, loadNotesSuccess, updateNoteSuccess} from './note.actions';
 import {Page} from './page';
 
 export const noteFeatureKey = 'note';
 
 export interface NoteState {
-  collection: Note[];
-  active: Note;
-  page: Page;
+  collection: Note[]
+  active: Note
+  page: Page
 }
 
 export const initialState: NoteState = {
@@ -41,7 +41,7 @@ const noteReducer1 = createReducer(
     return ({
       ...state,
       collection: [...state.collection.slice(0, noteIndex), note, ...state.collection.slice(noteIndex + 1)],
-      active: note
+      active: state.active && state.active.id === note.id ? note : state.active
     });
   }),
   on(deleteNoteSuccess, (state, {id}) => {
