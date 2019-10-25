@@ -1,6 +1,10 @@
-<app-text-snippet *ngFor='let note of notes$ | async' [id]='note.id'
-                  [header]='note.title || "Untitled"'
-                  [body]='note.body || "&nbsp;"' [bodyLimit]='100'
-                  [footer]='note.creationDate | date'
-                  (activationRequest)='activateNote($event)'
-                  [active]='note === (activeNote$ | async)'></app-text-snippet>
+<div class='list'>
+  <div class='item' *ngFor='let note of notes$ | async'>
+    <app-text-snippet [id]='note.id'
+                      [header]='note.title || "Untitled"' [headerLimit]='25'
+                      [body]='note.body || "&nbsp;"' [bodyLimit]='75'
+                      [footer]='note.creationDate | date'
+                      (activationRequest)='activateNote($event)'
+                      [active]='note === (activeNote$ | async)'></app-text-snippet>
+  </div>
+</div>

@@ -21,6 +21,7 @@ describe('TextSnippetComponent', () => {
     component = fixture.componentInstance;
     component.id = '1'
     component.header = 'a'
+    component.headerLimit = 100
     component.body = 'x'
     component.bodyLimit = 100
     component.footer = 'i'
@@ -41,6 +42,37 @@ describe('TextSnippetComponent', () => {
     expect(element.querySelector('.footer').textContent).toBe('i')
   })
 
+  it('should display empty header if not provided', () => {
+    component.header = undefined
+
+    fixture.detectChanges()
+
+    expect(element.querySelector('.header').textContent).toBe('')
+  })
+
+  it('should cut display of the header per configurable limit and append an ellipsis', () => {
+    component.header = 'abc'
+    component.headerLimit = 2
+
+    fixture.detectChanges()
+
+    expect(element.querySelector('.header').textContent).toBe('ab…')
+  })
+
+  it('should only allow a positive integer as header limit', () => {
+    for (const invalidBodyLimit of [1.02, -1, Infinity]) {
+      expect(() => component.bodyLimit = invalidBodyLimit).toThrow()
+    }
+  })
+
+  it('should display empty body if not provided', () => {
+    component.body = undefined
+
+    fixture.detectChanges()
+
+    expect(element.querySelector('.body').textContent).toBe('')
+  })
+
   it('should cut display of the body per configurable limit and append an ellipsis', () => {
     component.body = 'abc'
     component.bodyLimit = 2
@@ -56,22 +88,6 @@ describe('TextSnippetComponent', () => {
     }
   })
 
-  it('should display empty header if not provided', () => {
-    component.header = undefined
-
-    fixture.detectChanges()
-
-    expect(element.querySelector('.header').textContent).toBe('')
-  })
-
-  it('should display empty body if not provided', () => {
-    component.body = undefined
-
-    fixture.detectChanges()
-
-    expect(element.querySelector('.body').textContent).toBe('')
-  })
-
   it('should display empty footer if not provided', () => {
     component.footer = undefined
 
@@ -82,7 +98,7 @@ describe('TextSnippetComponent', () => {
 
   it('should visually represent active state when specified', () => {
     fixture.detectChanges()
-    const snippetElement = element.querySelector('.note-snippet')
+    const snippetElement = element.querySelector('.text-snippet')
     expect(snippetElement).not.toHaveClass('active')
 
     component.active = true
@@ -95,7 +111,7 @@ describe('TextSnippetComponent', () => {
     fixture.detectChanges()
     const activationRequestSpy = spyOn(component.activationRequest, 'emit')
 
-    element.querySelector('.note-snippet').dispatchEvent(new Event('click'))
+    element.querySelector('.text-snippet').dispatchEvent(new Event('click'))
     fixture.detectChanges()
 
     expect(activationRequestSpy).toHaveBeenCalledTimes(1)

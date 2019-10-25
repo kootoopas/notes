@@ -1,5 +1,5 @@
-<div class='note-snippet' [ngClass]='{"active": active}' (click)='activationRequest.emit(id)'>
-  <h4 class='header'>{{ header }}</h4>
-  <div class='body'>{{ body?.length <= bodyLimit1 ? body : (body | slice:0:bodyLimit1) + '…'  }}</div>
+<div class='text-snippet' [ngClass]='{"active": active}' (click)='activationRequest.emit(id)'>
+  <h4 class='header'>{{ header?.length <= headerLimit1 ? header : (header | slice:0:headerLimit1) + '…'  }}</h4>
+    <p class='body'>{{ body?.length <= bodyLimit1 ? body : (body | slice:0:bodyLimit1) + '…'  }}</p>
   <footer class='footer'><small>{{ footer }}</small></footer>
 </div>

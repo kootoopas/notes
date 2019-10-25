@@ -1,3 +1,13 @@
-.active {
-  background: lightyellow;
+.text-snippet {
+  padding: 1em;
+
+  &.active {
+    background: lightyellow;
+  }
 }
+
+.body {
+  height: 38px;
+  overflow-wrap: break-word;
+}
+
