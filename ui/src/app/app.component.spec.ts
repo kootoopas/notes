@@ -5,7 +5,7 @@ import {provideMockStore} from '@ngrx/store/testing';
 import {Store} from '@ngrx/store';
 import {RootState} from './reducers';
 import {initialState as noteInitialState, noteFeatureKey} from './note/note.reducers';
-import {Component, DebugElement} from '@angular/core';
+import {Component} from '@angular/core';
 import {loadNotes} from './note/note.actions';
 
 describe('AppComponent', () => {

@@ -6,7 +6,7 @@ import {RootState} from '../../reducers';
 import {selectActiveNote} from '../note.selectors';
 import {createNote, updateNote} from '../note.actions';
 import {createEmptyNote} from '../index';
-import {debounceTime, filter, map, tap} from 'rxjs/operators';
+import {debounceTime, filter, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-note-editor',

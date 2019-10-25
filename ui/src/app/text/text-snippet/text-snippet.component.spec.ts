@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TextSnippetComponent } from './text-snippet.component';
 import {provideMockStore} from '@ngrx/store/testing';
-import {asSpy} from '../../../test/utilities';
 
 describe('TextSnippetComponent', () => {
   let component: TextSnippetComponent;

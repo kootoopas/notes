@@ -1,12 +1,12 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {fromEvent, Observable, Subscription} from 'rxjs';
 import {Note} from '../note';
 import {RootState} from '../../reducers';
 import {selectNoteCollection, selectActiveNote} from '../note.selectors';
 import {activateNote, deleteNote} from '../note.actions';
-import {filter, map, mergeMap, publishBehavior, refCount, tap, withLatestFrom} from 'rxjs/operators';
-import {createEmptyNote} from '../index';
+import {filter, map, withLatestFrom} from 'rxjs/operators';
+
 @Component({
   selector: 'app-note-browser',
   templateUrl: './note-browser.component.html',
