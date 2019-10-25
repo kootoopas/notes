@@ -1,5 +1,5 @@
 import {initialState as initialNoteState, noteReducer, NoteState} from './note.reducers';
-import {createNoteSuccess, deleteNoteSuccess, loadNotesSuccess, updateNoteSuccess} from './note.actions';
+import {activateNote, createNoteSuccess, deleteNoteSuccess, loadNotesSuccess, updateNoteSuccess} from './note.actions';
 import {Note} from './note';
 
 describe('noteReducer', () => {
@@ -136,6 +136,16 @@ describe('noteReducer', () => {
       initialState.collection = [initialState.collection[0]]
       initialState.active = initialState.collection[0]
       expect(noteReducer(initialState, deleteNoteSuccess({id: 'a'})).active).toEqual(null)
+    })
+  })
+
+  describe('on note activation', () => {
+    it('should activate note if it exists in collection', () => {
+      expect(noteReducer(initialState, activateNote({id: 'b'})).active).toEqual(initialState.collection[1])
+    })
+
+    it('should not activate note if it doesn\'t exist in collection', () => {
+      expect(noteReducer(initialState, activateNote({id: 'b"'})).active).toEqual(initialState.active)
     })
   })
 })
