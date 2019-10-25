@@ -45,18 +45,26 @@ const noteReducer1 = createReducer(
     });
   }),
   on(deleteNoteSuccess, (state, {id}) => {
+    const getNextActiveNote = () => {
+      if (state.active && state.active.id === id) {
+        return state.collection.length === 1
+          ? null
+          : state.collection[getNextActiveNoteIndex()]
+      }
+      return state.active
+    }
+
     const getNextActiveNoteIndex = () => {
       const deletedNoteIndex: number = state.collection.findIndex((note) => note.id === id)
       return deletedNoteIndex === 0
-        ? deletedNoteIndex + 1
+        ? 1
         : deletedNoteIndex - 1
     }
+
     return {
       ...state,
       collection: state.collection.filter((note) => note.id !== id),
-      active: state.active.id === id
-        ? state.collection[getNextActiveNoteIndex()]
-        : state.active
+      active: getNextActiveNote()
     }
   }),
   on(activateNote, (state, {id}) => ({
