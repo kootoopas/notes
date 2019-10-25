@@ -42,11 +42,23 @@ export class NoteEditorComponent implements OnInit, OnDestroy {
 
   requestTitleEdit(note: Note, title: string): void {
     this.writableNote$.next({...note, title})
+
+    if (!note.id) {
+      this.store.dispatch(createNote(this.writableNote$.getValue()))
+      return
+    }
+
     this.store.dispatch(updateNote(this.writableNote$.getValue()))
   }
 
   requestBodyEdit(note: Note, body: string): void {
     this.writableNote$.next({...note, body})
+
+    if (!note.id) {
+      this.store.dispatch(createNote(this.writableNote$.getValue()))
+      return
+    }
+
     this.store.dispatch(updateNote(this.writableNote$.getValue()))
   }
 
